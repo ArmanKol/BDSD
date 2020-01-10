@@ -8,8 +8,10 @@ public class BDSDKafkaConsumerRunner {
 
     public static void main(String[] args) {
         boolean isAsync = false;
+        KafkaProducerTransactie producerTransactieThread = new KafkaProducerTransactie();
         BDSDKafkaConsumer consumerThread = new BDSDKafkaConsumer(TOPIC, isAsync);
         // start the producer
         consumerThread.start();
+        producerTransactieThread.start();
     }
 }

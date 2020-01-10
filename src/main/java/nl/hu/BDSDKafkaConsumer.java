@@ -22,9 +22,8 @@ public class BDSDKafkaConsumer extends Thread {
     private final KafkaConsumer<String, String> kafkaConsumer;
     private static final String KAFKA_SERVER_URL = "localhost";
     private static final int KAFKA_SERVER_PORT = 9092;
-    private static final String CLIENT_ID = "BDSDKafkaProducer";
+    private static final String CLIENT_ID = "BDSDKafkaConsumer";
     private static final Transactions transactions = new Transactions();
-    private CsvReader csvReader = new CsvReader();
 
     public BDSDKafkaConsumer(String topic, boolean isAsync) {
         Properties properties = new Properties();
@@ -118,8 +117,9 @@ public class BDSDKafkaConsumer extends Thread {
     /**
      * This method runs a poll job. It continuously asks for new data from Kafka.
      * @param consumer
+     * @throws Exception 
      */
-    private void pollForNewRecords(KafkaConsumer consumer) {
+    private void pollForNewRecords(KafkaConsumer consumer){
     	List<Integer> lijst = new ArrayList<Integer>();
         int threshold = 4;
         try {
