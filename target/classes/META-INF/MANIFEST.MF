@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Built-By: Arman.k
+Class-Path: bdsd19-1.0-SNAPSHOT.lib/kafka-clients-2.4.0.jar bdsd19-1.0
+ -SNAPSHOT.lib/zstd-jni-1.4.3-1.jar bdsd19-1.0-SNAPSHOT.lib/lz4-java-1
+ .6.0.jar bdsd19-1.0-SNAPSHOT.lib/snappy-java-1.1.7.3.jar bdsd19-1.0-S
+ NAPSHOT.lib/slf4j-api-1.7.5.jar bdsd19-1.0-SNAPSHOT.lib/slf4j-log4j12
+ -1.7.5.jar bdsd19-1.0-SNAPSHOT.lib/log4j-1.2.17.jar
+Build-Jdk: 1.8.0_151
+Created-By: Maven Integration for Eclipse
+Main-Class: nl.hu.BDSDKafkaConsumerRunner
+
