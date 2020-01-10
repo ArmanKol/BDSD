@@ -3,6 +3,7 @@ package nl.hu;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,18 +71,8 @@ public class BDSDKafkaConsumer extends Thread {
         return resultval;
     }
     
-    private Map<Integer, Integer> resolve_query_2(Transaction transaction, List<Integer> lijst){
-    	Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-    	
-    	for(Integer productid : lijst) {
-    		map.put(productid, Collections.frequency(lijst, productid));
-    	}
-    	
-    	return map;
-    }
-    
-    private Calendar createDate(String string) {
-    	String datumString = "2016-05-29 13:11:36";
+    private int getDayOfYearDate(String string) {
+    	String datumString = string;
 		String[] splitDatumTijd = datumString.split(" ");
 		
 		String datum = splitDatumTijd[0];
@@ -101,16 +92,23 @@ public class BDSDKafkaConsumer extends Thread {
 		Calendar datum2 = Calendar.getInstance();
 		datum2.set(jaar, maand, dag, uur, minuten, seconden);
 		
-		return datum2;
+		return datum2.get(datum2.DAY_OF_YEAR);
     }
     
-    private Map<Map<Integer, Integer>, String> resolve_query_2B(Transaction transaction){
-    	Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-    	Map<Map<Integer, Integer>, String> map2 = new HashMap<Map<Integer, Integer>, String>();
+    private void resolve_query_2(Transaction transaction){    	
+    	int transactionDate, tDate;
+    	transactionDate = getDayOfYearDate(transaction.getDateInString());
     	
-    	createDate(transaction.getDateInString());
+    	for(Transaction t : transactions.getTransactionList()) {
+    		tDate = getDayOfYearDate(t.getDateInString());
+    		
+    		if(transactionDate == tDate) {
+    			
+    		}
+    	}
     	
-    	return map2;
+    	
+    	
     }
     
 
@@ -129,20 +127,21 @@ public class BDSDKafkaConsumer extends Thread {
                 
                 for (ConsumerRecord<String, String> record : records)
                 {
-                    log.info("topic = "+record.topic() + " partition = "+record.partition()+", offset = %d, customer = "+record.key()+", productid = "+record.value()+"\n");
-                    Transaction t = new Transaction(Integer.parseInt(record.key()), Integer.parseInt(record.value()));
+                    JSONObject jsonObject = new JSONObject(record.value());
+                	log.info("topic = "+record.topic() + " partition = "+record.partition()+", offset = %d, customer = "+record.key()+", productid = "+record.value()+"\n");
+                    Transaction t = new Transaction(Integer.parseInt(record.key()), jsonObject.getInt("productID"), jsonObject.getString("datum"), jsonObject.getInt("filiaalID"));
                     // add transaction to the list of known transactions
                     transactions.add(t);
-                    lijst.add(t.getProductId());
+                    transactions.getTransactionList().add(t);
                     // run query 1
                     log.info("# of customers with threshold > " + threshold + ": " + resolve_query_1(t, threshold));
                     
                     // run query 2
-                    for (Map.Entry<Integer,Integer> entry : resolve_query_2(t, lijst).entrySet())
-                    {
-                        log.info("aantal_keer_tegelijk = " + entry.getValue() + 
-                                         ", productid = " + entry.getKey()); 
-                    }
+//                    for (Map.Entry<Integer,Integer> entry : resolve_query_2(t, lijst).entrySet())
+//                    {
+//                        log.info("aantal_keer_tegelijk = " + entry.getValue() + 
+//                                         ", productid = " + entry.getKey()); 
+//                    }
 
                     int updatedCount = 1;
                 }

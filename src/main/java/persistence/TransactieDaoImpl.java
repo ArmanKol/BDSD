@@ -15,10 +15,12 @@ public class TransactieDaoImpl extends MysqlBaseDao {
 		
 		try(Connection c = super.getConnection()){
 			Statement stmt = c.createStatement();
-			ResultSet result = stmt.executeQuery("");
+			ResultSet result = stmt.executeQuery("SELECT klant_idklant, product_idproduct, datum, filiaal_idfiliaal FROM aankoop;");
 			
 			while(result.next()) {
-				Transaction transactie = new Transaction(result.getInt(), result.getInt(), result.getString());
+				
+				Transaction transactie = new Transaction(result.getInt("klant_idklant"), result.getInt("product_idproduct"), result.getString("datum"), result.getInt("filiaal_idfiliaal"));
+				list.add(transactie);
 			}
 			
 		}catch(SQLException sqle) {

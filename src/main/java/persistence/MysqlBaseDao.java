@@ -8,8 +8,8 @@ public class MysqlBaseDao {
 		Connection connection = null;
 		
 		try {
-			Class.forName("com.mysql.jdbc.Driver");  
-			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/sonoo","root","root");  
+			Class.forName("com.mysql.cj.jdbc.Driver");  
+			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/kleinesupermarkt","root","admin");  
 		}catch(Exception e) {
 			throw new RuntimeException(e);
 		}

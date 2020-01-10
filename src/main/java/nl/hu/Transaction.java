@@ -6,10 +6,10 @@ import java.util.Date;
  * Created by roelant on 19/12/2019.
  */
 public class Transaction {
-    int customerId;
-    int productId;
-    int filiaalID;
-    String datum;
+    private int customerId;
+    private int productId;
+    private int filiaalID;
+    private String datum;
 
 
     public Transaction(int customerId, int productId) {
@@ -27,6 +27,13 @@ public class Transaction {
     	this.customerId = customerId;
         this.productId = productId;
         this.datum = datum;
+    }
+    
+    public Transaction(int customerId, int productId, String datum, int filiaalID) {
+    	this.customerId = customerId;
+        this.productId = productId;
+        this.datum = datum;
+        this.filiaalID = filiaalID;
     }
 
     public int getCustomerId() {

@@ -18,7 +18,8 @@ public class Transactions {
 
     private Map<Integer, Set<Integer>> transactionsByProduct = new HashMap<Integer, Set<Integer>>();
     private Map<Integer, Set<Integer>> transactionsByCustomer  = new HashMap<Integer, Set<Integer>>();
-
+    private List<Transaction> transactionsAllProducts = new ArrayList<Transaction>();
+    
     public Transactions() {
         this.transactionsByCustomer = new HashMap<Integer, Set<Integer>>();
     }
@@ -28,12 +29,12 @@ public class Transactions {
         if (!transactionsByProduct.containsKey(t.getProductId())) {
             transactionsByProduct.put(t.getProductId(), new HashSet<Integer>());
         }
-        ((Set) transactionsByProduct.get(t.getProductId())).add(t.customerId);
+        ((Set) transactionsByProduct.get(t.getProductId())).add(t.getCustomerId());
 
         if (!transactionsByCustomer.containsKey(t.getCustomerId())) {
             transactionsByCustomer.put(t.getCustomerId(), new HashSet<Integer>());
         }
-        ((Set) transactionsByCustomer.get(t.getCustomerId())).add(t.productId);
+        ((Set) transactionsByCustomer.get(t.getCustomerId())).add(t.getProductId());
     }
 
     /**
@@ -77,5 +78,11 @@ public class Transactions {
         }
         return customersProductMap;
     }
+    
+    public List<Transaction> getTransactionList(){
+    	return this.transactionsAllProducts;
+    }
+    
+    
 
 }

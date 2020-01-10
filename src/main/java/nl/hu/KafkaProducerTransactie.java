@@ -1,16 +1,16 @@
 package nl.hu;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
-import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.json.JSONObject;
+
+import persistence.TransactieDaoImpl;
 
 public class KafkaProducerTransactie extends Thread{
 	private final static String TOPIC = "transactie";
@@ -25,20 +25,23 @@ public class KafkaProducerTransactie extends Thread{
 	    return new KafkaProducer<>(props);
 	}
 	
-	static void runProducer(final int sendMessageCount) throws Exception {
+	static void runProducer() throws Exception {
 	      final Producer<String, String> producer = createProducer();
-	      long time = System.currentTimeMillis();
+	      
+	      TransactieDaoImpl transactieDaoImpl = new TransactieDaoImpl();
+	      List<Transaction> transactions = transactieDaoImpl.findAll();
 
 	      try {
-	          for (long index = time; index < time + sendMessageCount; index++) {
-	              final ProducerRecord<String, String> record =
-	                      new ProducerRecord<>(TOPIC, "1", "0");
-
-	              RecordMetadata metadata = producer.send(record).get();
-
-	              long elapsedTime = System.currentTimeMillis() - time;
-	              System.out.printf("sent record(key=%s value=%s) " + "meta(partition=%d, offset=%d) time=%d\n",
-	            		  record.key(), record.value(), metadata.partition(), metadata.offset(), elapsedTime);
+	          for (Transaction t : transactions) {
+	        	  JSONObject jsonObject = new JSONObject();
+	        	  
+	        	  jsonObject.put("productID", t.getProductId());
+	        	  jsonObject.put("datum", t.getDateInString());
+	        	  jsonObject.put("filiaalID", t.getFiliaalID());
+	        	  
+	              final ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, Integer.toString(t.getCustomerId()), jsonObject.toString());
+	              producer.send(record);
+	              //RecordMetadata metadata = producer.send(record).get();
 
 	          }
 	      } finally {
@@ -49,7 +52,7 @@ public class KafkaProducerTransactie extends Thread{
 	
 	public void run(){
 		try {
-			runProducer(5);
+			runProducer();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
