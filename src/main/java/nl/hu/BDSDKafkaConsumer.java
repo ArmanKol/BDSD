@@ -99,11 +99,15 @@ public class BDSDKafkaConsumer extends Thread {
     	int transactionDate, tDate;
     	transactionDate = getDayOfYearDate(transaction.getDateInString());
     	
+    	int resultval = 0;
+    	
     	for(Transaction t : transactions.getTransactionList()) {
     		tDate = getDayOfYearDate(t.getDateInString());
     		
-    		if(transactionDate == tDate) {
+    		if(transactionDate == tDate && transaction.getProductId() != t.getProductId()) {
+    			log.info(t.getProductId() + ":"+transaction.getProductId());
     			
+    			resultval++;
     		}
     	}
     	
@@ -134,7 +138,8 @@ public class BDSDKafkaConsumer extends Thread {
                     transactions.add(t);
                     transactions.getTransactionList().add(t);
                     // run query 1
-                    log.info("# of customers with threshold > " + threshold + ": " + resolve_query_1(t, threshold));
+                    //log.info("# of customers with threshold > " + threshold + ": " + resolve_query_1(t, threshold));
+                    resolve_query_2(t);
                     
                     // run query 2
 //                    for (Map.Entry<Integer,Integer> entry : resolve_query_2(t, lijst).entrySet())
