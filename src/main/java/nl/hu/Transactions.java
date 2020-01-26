@@ -1,88 +1,65 @@
 package nl.hu;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-/**
- * Created by roelant on 19/12/2019.
- */
 public class Transactions {
-    private static Logger log = LoggerFactory.getLogger("Transactions");
-
-    private Map<Integer, Set<Integer>> transactionsByProduct = new HashMap<Integer, Set<Integer>>();
-    private Map<Integer, Set<Integer>> transactionsByCustomer  = new HashMap<Integer, Set<Integer>>();
-    private List<Transaction> transactionsAllProducts = new ArrayList<Transaction>();
+	private static Logger log = LoggerFactory.getLogger("Transactions");    
+    public List<Transaction> allTransactionsWithoutDuplicates = new ArrayList<Transaction>();
     
     public Transactions() {
-        this.transactionsByCustomer = new HashMap<Integer, Set<Integer>>();
+
     }
 
     protected void add(Transaction t) {
-        log.info("Adding transaction %s"+ t);
-        if (!transactionsByProduct.containsKey(t.getProductId())) {
-            transactionsByProduct.put(t.getProductId(), new HashSet<Integer>());
-        }
-        ((Set) transactionsByProduct.get(t.getProductId())).add(t.getCustomerId());
-
-        if (!transactionsByCustomer.containsKey(t.getCustomerId())) {
-            transactionsByCustomer.put(t.getCustomerId(), new HashSet<Integer>());
-        }
-        ((Set) transactionsByCustomer.get(t.getCustomerId())).add(t.getProductId());
-    }
-
-    /**
-     * returns all customers that have bought productId.
-     * @param productId
-     * @return set of customers.
-     */
-    private Set<Integer> customersWithProduct(int productId) {
-        // log.info("Looking up customers that have bought " + productId);
-        return  transactionsByProduct.get(productId);
-    }
-
-
-    /**
-     * returns all products that customerId has bought.
-     * @param customerId
-     * @return Set of products.
-     */
-    Set<Integer> productsByCustomer(int customerId) {
-        // log.info("Looking up products that customer "+ customerId +" has bought");
-        return  transactionsByCustomer.get(customerId);
-    }
-
-    /**
-     * returns all customers that have bought any or more products in the set productIds.
-     * @param productIds
-     * @return Set of
-     */
-    Map<Integer, Integer> customersWithProduct(Set<Integer> productIds) {
-        // log.info("CustomersWithProduct "+ productIds.toString());
-        Map<Integer, Integer> customersProductMap = new HashMap<Integer, Integer>();
-        for (int productId : productIds) {
-            Set<Integer> customerIds = customersWithProduct(productId);
-            for (int customerId : customerIds) {
-                if (!customersProductMap.containsKey(customerId)) {
-                    customersProductMap.put(customerId, 1);
-                } else {
-                    customersProductMap.put(customerId, customersProductMap.get(customerId) + 1);
-                }
-            }
-        }
-        return customersProductMap;
+    	if(!this.allTransactionsWithoutDuplicates.contains(t)) {
+    		this.allTransactionsWithoutDuplicates.add(t);
+    	}
     }
     
-    public List<Transaction> getTransactionList(){
-    	return this.transactionsAllProducts;
+    public Map<Integer, Integer> getCustomerWithSameProduct(int customerID){
+    	List<Transaction> list = this.allTransactionsWithoutDuplicates;
+    	Map<Integer, Integer> mapper = new HashMap<Integer, Integer>();
+    	
+    	for(Transaction a : list) {
+    		for(Transaction b: list) {
+    			if((a.getCustomerId() != b.getCustomerId() && a.getProductId() == b.getProductId()) && a.getCustomerId() == customerID) {
+    				if(mapper.containsKey(b.getCustomerId())) {
+    					mapper.replace(b.getCustomerId(), mapper.get(b.getCustomerId())+1);
+    				}else {
+    					mapper.put(b.getCustomerId(), 1);
+    				}
+    			}
+    		}
+    	}
+    	return mapper;
     }
     
-    
+    public Map<String, Integer> getTransactionProductBoughtSameTime(){
+    	List<Transaction> list = this.allTransactionsWithoutDuplicates;
+    	Map<String, Integer> returnMap = new HashMap<String, Integer>();
+    	
+    	for(Transaction transaction : list) {
+    		for(Transaction transactionB: list) {
+	    		if(transaction.getDateInString().equals(transactionB.getDateInString()) && transaction.getProductId() != transactionB.getProductId()
+	    				&& transaction.getCustomerId() == transactionB.getCustomerId() && transaction.getFiliaalID() == transactionB.getFiliaalID()) {
+	    			String productPair = transaction.getProductId()+":"+transactionB.getProductId();
+	        		String[] split = productPair.split(":");
+	        		String reversedProductPair = split[1]+":"+split[0];
+	    			if(returnMap.containsKey(productPair)) {
+	    				returnMap.replace(productPair, (returnMap.get(productPair))+1);
+	    			}else if(!returnMap.containsKey(productPair) && !returnMap.containsKey(reversedProductPair)){
+	    				returnMap.put(productPair, 1);
+	    			}
+	    		}
+    		}
+    	}
+    	return returnMap;
+    }
 
 }

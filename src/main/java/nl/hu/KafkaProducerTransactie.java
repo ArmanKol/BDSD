@@ -30,7 +30,6 @@ public class KafkaProducerTransactie extends Thread{
 	      
 	      TransactieDaoImpl transactieDaoImpl = new TransactieDaoImpl();
 	      List<Transaction> transactions = transactieDaoImpl.findAll();
-
 	      try {
 	          for (Transaction t : transactions) {
 	        	  JSONObject jsonObject = new JSONObject();

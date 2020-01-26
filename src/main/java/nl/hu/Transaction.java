@@ -51,12 +51,24 @@ public class Transaction {
     public String getDateInString() {
     	return datum;
     }
+    
+//    @Override
+//    public boolean equals(Object obj) {
+//		if(obj instanceof Transaction) {
+//			if(this.getCustomerId() == ((Transaction) obj).getCustomerId() && this.getProductId() == ((Transaction)obj).getProductId()) {
+//				return true;
+//			}
+//		}
+//    	return false;
+//    	
+//    }
 
     @Override
     public String toString() {
         return "Transaction{" +
-                "customerId=" + customerId +
-                ", productId=" + productId +
-                '}';
+                "customerId=" + this.customerId +
+                ", productId=" + this.productId +
+                ", datum=" + this.datum +
+                ", filiaalID="+ this.getFiliaalID() + "}";
     }
 }
