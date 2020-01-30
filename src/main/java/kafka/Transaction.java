@@ -1,33 +1,10 @@
-package nl.hu;
+package kafka;
 
-import java.util.Date;
-
-/**
- * Created by roelant on 19/12/2019.
- */
 public class Transaction {
     private int customerId;
     private int productId;
     private int filiaalID;
     private String datum;
-
-
-    public Transaction(int customerId, int productId) {
-        this.customerId = customerId;
-        this.productId = productId;
-    }
-    
-    public Transaction(int customerId, int productId, int filiaalID) {
-        this.customerId = customerId;
-        this.productId = productId;
-        this.filiaalID = filiaalID;
-    }
-    
-    public Transaction(int customerId, int productId, String datum) {
-    	this.customerId = customerId;
-        this.productId = productId;
-        this.datum = datum;
-    }
     
     public Transaction(int customerId, int productId, String datum, int filiaalID) {
     	this.customerId = customerId;
@@ -52,16 +29,6 @@ public class Transaction {
     	return datum;
     }
     
-//    @Override
-//    public boolean equals(Object obj) {
-//		if(obj instanceof Transaction) {
-//			if(this.getCustomerId() == ((Transaction) obj).getCustomerId() && this.getProductId() == ((Transaction)obj).getProductId()) {
-//				return true;
-//			}
-//		}
-//    	return false;
-//    	
-//    }
 
     @Override
     public String toString() {

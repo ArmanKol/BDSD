@@ -1,27 +1,33 @@
-package nl.hu;
+package kafka;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-public class Transactions {
-	private static Logger log = LoggerFactory.getLogger("Transactions");    
+public class Transactions {  
     public List<Transaction> allTransactionsWithoutDuplicates = new ArrayList<Transaction>();
     
     public Transactions() {
 
     }
-
+    
+    /**
+     * Voegt alle transacties toe aan een lijst.
+     * @param t transaction object
+     */
     protected void add(Transaction t) {
     	if(!this.allTransactionsWithoutDuplicates.contains(t)) {
     		this.allTransactionsWithoutDuplicates.add(t);
     	}
     }
     
+    
+    /**
+     * Geeft alle verschillende klanten terug die dezelfde producten hebben gekocht.
+     * @param consumerID wordt gebruikt om de lijst te verkleinen naar alleen de klantid die wordt opgegeven.
+     * @return HashMap dat bestaat uit klantparen die dezelfde producten hebben gekocht.  
+     */
     public Map<Integer, Integer> getCustomerWithSameProduct(int customerID){
     	List<Transaction> list = this.allTransactionsWithoutDuplicates;
     	Map<Integer, Integer> mapper = new HashMap<Integer, Integer>();
@@ -40,6 +46,11 @@ public class Transactions {
     	return mapper;
     }
     
+    
+    /**
+     * Geeft alle verschillende productparen terug die op dezelfde dag tegelijk zijn gekocht.
+     * @return HashMap dat bestaat uit productparen en hoevaak ze tegelijk zijn gekocht.    
+     */
     public Map<String, Integer> getTransactionProductBoughtSameTime(){
     	List<Transaction> list = this.allTransactionsWithoutDuplicates;
     	Map<String, Integer> returnMap = new HashMap<String, Integer>();

@@ -1,4 +1,4 @@
-package nl.hu;
+package kafka;
 
 import java.util.List;
 import java.util.Properties;
@@ -32,16 +32,16 @@ public class KafkaProducerTransactie extends Thread{
 	      List<Transaction> transactions = transactieDaoImpl.findAll();
 	      try {
 	          for (Transaction t : transactions) {
+	        	  //Haalt alle transacties op en stopt die in een JSON object.
 	        	  JSONObject jsonObject = new JSONObject();
 	        	  
 	        	  jsonObject.put("productID", t.getProductId());
 	        	  jsonObject.put("datum", t.getDateInString());
 	        	  jsonObject.put("filiaalID", t.getFiliaalID());
 	        	  
+	        	  //Stopt alle data in een producer record, zodat de consumer die informatie kan opvragen.
 	              final ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, Integer.toString(t.getCustomerId()), jsonObject.toString());
 	              producer.send(record);
-	              //RecordMetadata metadata = producer.send(record).get();
-
 	          }
 	      } finally {
 	          producer.flush();

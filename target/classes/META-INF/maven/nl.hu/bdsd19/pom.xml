@@ -8,15 +8,15 @@
   <artifactId>bdsd19</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>bdsd19</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <name>bigData_assignment</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
+	
+	
 
   <dependencies>
     <dependency>
@@ -25,6 +25,21 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+    
+    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+	<dependency>
+	    <groupId>mysql</groupId>
+	    <artifactId>mysql-connector-java</artifactId>
+	    <version>8.0.18</version>
+	</dependency>
+    
+    <!-- https://mvnrepository.com/artifact/org.json/json -->
+	<dependency>
+	    <groupId>org.json</groupId>
+	    <artifactId>json</artifactId>
+	    <version>20190722</version>
+	</dependency>
+    
 
     <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
     <dependency>

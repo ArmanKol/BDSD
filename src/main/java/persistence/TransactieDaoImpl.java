@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.hu.Transaction;
+import kafka.Transaction;
 
 public class TransactieDaoImpl extends MysqlBaseDao {
 	public List<Transaction> findAll(){
